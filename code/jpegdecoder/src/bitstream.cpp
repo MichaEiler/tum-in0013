@@ -83,24 +83,3 @@ unsigned char BitStream::nextByte(bool skip)
         return result;
 }
 
-#ifdef DEBUG
-void BitStream::printNextBits(int n, bool skip)
-{
-        remember();
-        for(int i = 0; i < n && position < length -1; i++) {
-                if (position%8 == 0) {
-                        cout<<" ";
-                }
-                if ((!skip && nextNoSkip()) || (skip && next())) {
-                        cout<<"1";
-                } else {
-                        cout<<"0";
-                }
-        }
-        cout<<endl;
-
-        rewind();
-}
-#endif
-
-
