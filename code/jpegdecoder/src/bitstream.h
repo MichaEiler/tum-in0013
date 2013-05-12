@@ -22,7 +22,6 @@ public:
         unsigned char nextByte(bool skip);
         bool isEnd() { return length-1 <= position; }
         void moveBack(int bits) { position -= bits; }
-        void printNextBits(int n, bool skip);
         void remember() { storedPositions.push(position); }
         void forget() { storedPositions.pop(); }
         void rewind() { position = storedPositions.top(); forget(); }
