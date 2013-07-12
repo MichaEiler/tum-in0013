@@ -1,4 +1,5 @@
 #include "bitstream.h"
+#include <vector>
 #ifdef DEBUG
 #include <iostream>
 using namespace std;

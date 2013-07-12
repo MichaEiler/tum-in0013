@@ -18,7 +18,7 @@ class DCT
 {
 public:
         // 2d dct for 8x8 matrix in form of an array with 64 values
-        // will produce a segfault if the matrix is smaller!
+        // DCT is a lot slower than the FDCT, this method has just been used to validating the FDCT algorithm
         /*static inline void transform(float* values)
         {
                 float* result = new float[64];

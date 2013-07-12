@@ -1,7 +1,6 @@
 #ifndef __BITSTREAM_H
 #define __BITSTREAM_H
 
-#include <vector>
 #include <stack>
 
 #define BITSTREAM_EOS -1
