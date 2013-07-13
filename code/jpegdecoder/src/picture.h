@@ -11,9 +11,10 @@ struct Pixel
 class Picture
 {
 private:
-        Pixel** data;
+        Pixel* data;
         int width;
         int height;
+        int position;
 public:
         explicit Picture();
         virtual ~Picture();
@@ -23,15 +24,21 @@ public:
         inline void setPixel(int x, int y, int red, int green, int blue)
         {
                 if ( x >= 0 && x < width && y >= 0 && y < height) {
-                        data[y][x].red = red;
-                        data[y][x].green = green;
-                        data[y][x].blue = blue;
+                        register int pos = y*width+x;
+                        data[pos].red = red;
+                        data[pos].green = green;
+                        data[pos].blue = blue;
                 }
         }
         inline Pixel& getPixel(int x, int y)
         {
-                return data[y][x];
+                return data[y*width+x];
         }
+        inline Pixel& getNextPixel()
+        {
+                return data[position++];
+        }
+        void resetPosition() { position = 0; }
 };
 
 #endif // __PICTURE_H

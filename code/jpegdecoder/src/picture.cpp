@@ -5,14 +5,15 @@ using namespace std;
 Picture::Picture()
 {
         data = nullptr;
+        position = 0;
 }
 
 Picture::~Picture()
 {
-        for(int i = 0; i < height; i++) {
-                delete[] data[i];
+        if (data != nullptr)
+        {
+                delete[] data;
         }
-        delete[] data;
 }
 
 void Picture::init(int width, int height)
@@ -20,9 +21,6 @@ void Picture::init(int width, int height)
         this->width = width;
         this->height = height;
 
-        data = new Pixel*[height];
-        for (int i = 0; i < height; i++) {
-                data[i] = new Pixel[width];
-        }
+        data = new Pixel[width * height];
 }
 

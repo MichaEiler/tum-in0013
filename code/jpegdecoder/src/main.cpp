@@ -46,10 +46,11 @@ public:
                 Pixel p;
                 surface = ImageSurface::create(Format::FORMAT_RGB24, picture.getWidth(), picture.getHeight());
                 context = Context::create(surface);
-                
-                for(int x = 0; x < picture.getWidth(); x++) {
-                        for (int y = 0; y < picture.getHeight(); y++) {
-                                p = picture.getPixel(x, y);
+               
+                for (int y = 0; y < picture.getHeight(); y++) {
+                        for(int x = 0; x < picture.getWidth(); x++) {
+                                
+                                p = picture.getNextPixel();
                                 context->set_source_rgb(p.red/255.0, p.green/255.0, p.blue/255.0);
                                 context->rectangle(x, y, 1, 1);
                                 context->fill();

@@ -539,6 +539,7 @@ inline int JpegDecoder::parseScanHeader(ColorComponent* components, int** coef, 
 inline int JpegDecoder::parseBlock(BitStream& stream, HuffmanTree* dcTable, HuffmanTree* acTable, QTable* qTable, int& previousDC, int* values)
 {
         int error = 0;
+        int zzpos = 0;
         memset((void*)values, 0, 64 * sizeof(int));
         for(int i = 0; i < 64; i++) {
                 unsigned char len;
@@ -557,18 +558,19 @@ inline int JpegDecoder::parseBlock(BitStream& stream, HuffmanTree* dcTable, Huff
 
                 if (i != 0) // preceding zeros
                         i += (len >> 4);
-                int value = (int)stream.next(len & 0x0F, error);
+                int value = stream.next(len & 0x0F, error);
                 CHECK_ERROR_BITSTREAM(error);
 
                 if ((value & (1 << ((len & 0x0F) - 1))) == 0) {
                         value -= (1 << (len & 0x0F)) - 1;
                 }
-                values[zz[i]] = value;
+                zzpos = zz[i];
+                values[zzpos] = value;
                 if (i == 0) {
-                        values[zz[i]] += previousDC;
-                        previousDC = values[zz[i]];
+                        values[zzpos] += previousDC;
+                        previousDC = values[zzpos];
                 }
-                values[zz[i]] *= qTable->values[zz[i]];
+                values[zzpos] *= qTable->values[zzpos];
         }
         return 0;
 }
