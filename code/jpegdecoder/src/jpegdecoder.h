@@ -13,6 +13,7 @@
 #ifndef __JPEGDECODER_H
 #define __JPEGDECODER_H
 
+#include <memory>
 #include <string>
 #include "picture.h"
 
@@ -53,10 +54,10 @@ private:
                                         // one RSTn marker is in the content after
                                         // every restartInterval MCU blocks
         bool useRST;                    // true if the file contained 0xFFDD
-        QTable* qTables[4];             // used to store the quantization tables
+        std::shared_ptr<QTable> qTables[4];             // used to store the quantization tables
 
-        HuffmanTree* hTablesDC[3];      // used to store the huffman tables
-        HuffmanTree* hTablesAC[3];
+        std::shared_ptr<HuffmanTree> hTablesDC[3];      // used to store the huffman tables
+        std::shared_ptr<HuffmanTree> hTablesAC[3];
 
         Picture picture;                // final picture data
         
@@ -69,8 +70,8 @@ private:
         int parseEXIF();                // will just read the length and skip the EXIF content
         int parseSOS();                 // parsing of image data
 
-        int parseBlock(BitStream& stream, HuffmanTree* dcTable, HuffmanTree* acTable,
-                       QTable* qTable, int& previousDC, int* values);
+        int parseBlock(BitStream& stream, std::shared_ptr<HuffmanTree> dcTable, std::shared_ptr<HuffmanTree> acTable,
+                       std::shared_ptr<QTable> qTable, int& previousDC, int* values);
         int parseScanHeader(ColorComponent* components, int** coef,
                             int* cy, int* ccb, int* ccr);
         void skipRST(BitStream& stream);

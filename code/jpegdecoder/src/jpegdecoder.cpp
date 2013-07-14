@@ -66,24 +66,11 @@ JpegDecoder::JpegDecoder()
         height = -1;
         useRST = false;
         restartInterval = -1;
-        hTablesDC[0] = hTablesDC[1] = nullptr;
-        hTablesAC[0] = hTablesAC[1] = nullptr;
-        qTables[0] = qTables[1] = nullptr;
 }
 
 JpegDecoder::~JpegDecoder()
 {
-        for(int i = 0; i < 2; i++) {
-                if (hTablesDC[i] != nullptr) {
-                        delete hTablesDC[i];
-                        hTablesDC[i] = nullptr;
-                }
-
-                if (hTablesAC[i] != nullptr) {
-                        delete hTablesAC[i];
-                        hTablesAC[i] = nullptr;
-                }
-        }
+        // thank's to the shared-ptr's we don't have to free any memory
 }
 
 bool JpegDecoder::read(std::string path)
@@ -280,7 +267,7 @@ int JpegDecoder::parseDHT()
                 unsigned char information = raw[position++];
                 length--;
 
-                HuffmanTree* huffmanTree = new HuffmanTree();
+                shared_ptr<HuffmanTree> huffmanTree(new HuffmanTree());
                 unsigned int nr = information & 0x0F; // 0-3. bit: nr
                 bool isDC = (information & 0x10) == 0;
 
@@ -318,7 +305,6 @@ int JpegDecoder::parseDHT()
                                 hTablesAC[nr] = huffmanTree;
                         }
                 } else {
-                        delete huffmanTree;
                         return ERROR_NOTSUPPORTED;
                 }
         }
@@ -333,7 +319,7 @@ int JpegDecoder::parseDQT()
         unsigned short length = parseUShort() - 2;
 
         while (length > 0) {
-                QTable* qTable = new QTable();
+                shared_ptr<QTable> qTable(new QTable());
                 CHECK_RANGE(position, 1, raw);
                 unsigned char information = (unsigned char)raw[position++];
                 length--;
@@ -356,7 +342,6 @@ int JpegDecoder::parseDQT()
                 }
                 
                 if (!(qTable->id == 0x00 || qTable->id == 0x01)) {
-                        delete qTable;
                         return ERROR_NOTSUPPORTED;
                 }
 
@@ -536,7 +521,8 @@ inline int JpegDecoder::parseScanHeader(ColorComponent* components, int** coef, 
         return 0;
 }
 
-inline int JpegDecoder::parseBlock(BitStream& stream, HuffmanTree* dcTable, HuffmanTree* acTable, QTable* qTable, int& previousDC, int* values)
+inline int JpegDecoder::parseBlock(BitStream& stream, shared_ptr<HuffmanTree> dcTable, shared_ptr<HuffmanTree> acTable,
+                                   shared_ptr<QTable> qTable, int& previousDC, int* values)
 {
         int error = 0;
         int zzpos = 0;
