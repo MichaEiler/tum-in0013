@@ -10,7 +10,9 @@ class BitStream
 private:
         unsigned int position;
         unsigned int length;
-        char* raw;
+        char* raw;      // I don't use unique_ptr here because the source stream (from JpegDecoder object)
+                        // is handled by std::string and freeing it twice would
+                        // obviously result in a segfault
         std::stack<unsigned int> storedPositions;
 public:
         BitStream(char* raw, unsigned int length);
