@@ -13,7 +13,10 @@
 
 struct HuffmanNode
 {
-        HuffmanNode* left;
+        HuffmanNode* left;              // I don't use shared_ptr here as this results in an additional
+                                        // 300ms (from 500ms to 8xx ms for decoding a big picture) just
+                                        // because we have the overhead of the shared_ptr class and 
+                                        // therefor multiple lookups to get address for the child-node.
         HuffmanNode* right;
         unsigned char value;
         bool hasValue;
