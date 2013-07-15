@@ -43,7 +43,7 @@ protected:
         bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr);
 public:
         JPEGViewer(Picture& picture) {
-                Pixel p;
+                Pixel* p;
                 surface = ImageSurface::create(Format::FORMAT_RGB24, picture.getWidth(), picture.getHeight());
                 context = Context::create(surface);
                
@@ -51,11 +51,12 @@ public:
                         for(int x = 0; x < picture.getWidth(); x++) {
                                 
                                 p = picture.getNextPixel();
-                                context->set_source_rgb(p.red/255.0, p.green/255.0, p.blue/255.0);
+                                context->set_source_rgb(p->red/255.0, p->green/255.0, p->blue/255.0);
                                 context->rectangle(x, y, 1, 1);
                                 context->fill();
                         }
                 }
+                picture.resetPosition();
         }
 };
 

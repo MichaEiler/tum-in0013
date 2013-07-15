@@ -23,9 +23,9 @@ using namespace std;
 #define JFIF_DRI                0xDD    // Definition for restart interval (optional?)
 #define JFIF_EOI                0xD9    // End of Image
 
-#define COLOR_Y                   0x01
-#define COLOR_CB                  0x02
-#define COLOR_CR                  0x03
+#define COLOR_Y                 0x01
+#define COLOR_CB                0x02
+#define COLOR_CR                0x03
 
 #define ERROR_NOIMAGEDATA       0x10
 #define ERROR_OUTOFRANGE        0x11

@@ -34,9 +34,9 @@ public:
         {
                 return data[y*width+x];
         }
-        inline Pixel& getNextPixel()
+        inline Pixel* getNextPixel()
         {
-                return data[position++];
+                return &data[position++];
         }
         void resetPosition() { position = 0; }
 };
