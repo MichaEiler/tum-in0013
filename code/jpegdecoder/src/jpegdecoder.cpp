@@ -49,6 +49,26 @@ using namespace std;
 #define CHECK_ERROR_HUFFMAN(a)  if (a != 0) return a ^ ERROR_HUFFMANPREFIX;
 #define CHECK_ERROR_BITSTREAM(a) if (a != 0) return a ^ ERROR_BITSTREAMPREFIX;
 
+#if DEBUG
+
+ostream& operator<<(ostream& stream, const QTable& qt) {
+        stream << "QuantizationTable-Nr: " << (unsigned int)qt.id
+                << ", Precision: " << (unsigned int)qt.precision << endl;
+        for (int i = 0; i < 64; i++)
+                stream << qt.values[i] << " ";
+        stream << endl;
+        return stream;
+}
+
+ostream& operator<<(ostream& stream, const ColorComponent& c) {
+        stream << "hsf: " << (unsigned int)c.hsf << ", vsf: "
+                << (unsigned int)c.vsf << ", qtn: " << (unsigned int)c.qt << endl;
+        return stream;
+}
+
+#endif 
+
+
 // numbers in the array for the inverse zigzag algorithm
 static unsigned char zz[64] =   {  0,  1,  8, 16,  9,  2,  3, 10,
                                   17, 24, 32, 25, 18, 11,  4,  5,
@@ -230,9 +250,7 @@ int JpegDecoder::parseSOF0()
 #if DEBUG
         cout << "Width: " << width << endl;
         cout << "Height: " << height << endl;
-        cout << "YCBCR_Y, hsf: " << (unsigned int)color_y.hsf << ", vsf: " << (unsigned int)color_y.vsf << ", qtn: " << (unsigned int)color_y.qt  << endl;
-        cout << "YCBCR_CB, hsf: " << (unsigned int)color_cb.hsf << ", vsf: " << (unsigned int)color_cb.vsf << ", qtn: " << (unsigned int)color_cb.qt  << endl;
-        cout << "YCBCR_CR, hsf: " << (unsigned int)color_cr.hsf << ", vsf: " << (unsigned int)color_cr.vsf << ", qtn: " << (unsigned int)color_cr.qt  << endl;
+        cout << "YCBCR_Y, " << color_y << "YCBCR_CB, " << color_cb << "YCBCR_CR, " << color_cr;
 #endif
 
         return 0;
@@ -291,14 +309,14 @@ int JpegDecoder::parseDHT()
                 for (int i = 0; i < 16; i++) {
                         CHECK_RANGE(position, nodeCounters[i], raw);
 
-                        if((errcode = huffmanTree->insertNextRow(&raw[position], nodeCounters[i])) != 0) {
+                        if ((errcode = huffmanTree->insertNextRow(&raw[position], nodeCounters[i])) != 0) {
                                 return errcode ^ ERROR_HUFFMANPREFIX;
                         }
 
                         length -= nodeCounters[i];
                         position += nodeCounters[i];
                 }
-                if (nr == 0x01|| nr == 0x00) {
+                if (nr == 0x01 || nr == 0x00) {
                         if (isDC) {
                                 hTablesDC[nr] = huffmanTree;
                         } else {
@@ -348,10 +366,7 @@ int JpegDecoder::parseDQT()
                 qTables[qTable->id] = qTable;
         
 #if DEBUG
-                cout << "QuantationTable-Nr. " << (unsigned int)qTable->id << ", Precision: " << (unsigned int)qTable->precision << endl;
-                for (int i = 0; i < 64; i++)
-                        cout << " " << qTable->values[i];
-                cout << endl;
+                cout << *qTable;
 #endif
         }
 
