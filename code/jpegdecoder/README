@@ -4,6 +4,7 @@ Required Software Versions
     * g++ >= 4.7 or clang++ >= 3.0
 
 Testsystems:
+    * Fedora 19 64bit, cairomm-devel 1.10, gtkmm30-devel 3.8, clang++ 3.3, g++ 4.8.1
     * Fedora 18 64bit, cairomm-devel 1.10, gtkmm30-devel 3.6, clang++ 3.2, g++ 4.7.2
     * Debian Wheezy 64bit, libcairomm-1.0-dev 1.10, libgtkmm-3.0-dev 3.4, clang++ 3.0, g++ 4.7.2
 
@@ -20,4 +21,7 @@ or for the debug version:
     CXX=g++ make -j4 debug
 
 Executing the Jpeg-Decoder:
-./jpgd data/sample1.jpg    
+./jpgd data/sample1.jpg
+
+
+Note: The g++ compiler produces a better optimized binary. This will result in a noticeable performance boost.
